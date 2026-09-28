@@ -1,76 +1,147 @@
 #!/usr/bin/env python3
+
 from __future__ import print_function
+
 import requests
 import json
 import time
-import sys
 import base64
 import jsonpickle
 import random
+import argparse
+
 
 def doRawImage(addr, debug=False):
+
     # prepare headers for http request
     headers = {'content-type': 'image/png'}
+
     img = open('Flatirons_Winter_Sunrise_edit_2.jpg', 'rb').read()
+
     # send http request with image and receive response
     image_url = addr + '/api/rawimage'
     response = requests.post(image_url, data=img, headers=headers)
+
     if debug:
-        # decode response
         print("Response is", response)
         print(json.loads(response.text))
 
+
 def doAdd(addr, debug=False):
+
     headers = {'content-type': 'application/json'}
+
     # send http request with image and receive response
     add_url = addr + "/api/add/5/10"
     response = requests.post(add_url, headers=headers)
+
     if debug:
-        # decode response
         print("Response is", response)
         print(json.loads(response.text))
+
 
 def doDotProduct(addr, debug=False):
     pass
 
+
 def doJsonImage(addr, debug=False):
     pass
 
-if len(sys.argv) < 3:
-    print(f"Usage: {sys.argv[0]} <server ip> <cmd> <reps>")
-    print(f"where <cmd> is one of add, rawImage, sum or jsonImage")
-    print(f"and <reps> is the integer number of repititions for measurement")
 
-host = sys.argv[1]
-cmd = sys.argv[2]
-reps = int(sys.argv[3])
+# ---------------------------------------------------------
+# Parse command-line arguments
+# ---------------------------------------------------------
 
-addr = f"http://{host}:5000"
-print(f"Running {reps} reps against {addr}")
+parser = argparse.ArgumentParser(
+    description='REST client for measuring server operations'
+)
 
-if cmd == 'rawImage':
+parser.add_argument(
+    'host',
+    help='IP address or hostname of the REST server'
+)
+
+parser.add_argument(
+    'cmd',
+    choices=['add', 'rawImage', 'dotProduct', 'jsonImage'],
+    help='Operation to perform'
+)
+
+parser.add_argument(
+    'reps',
+    type=int,
+    help='Number of repetitions for measurement'
+)
+
+parser.add_argument(
+    '-p', '--port',
+    type=int,
+    default=5000,
+    help='Server port (default: 5000)'
+)
+
+parser.add_argument(
+    '-d', '--debug',
+    action='store_true',
+    help='Print the response from the server'
+)
+
+args = parser.parse_args()
+
+
+# ---------------------------------------------------------
+# Build server address
+# ---------------------------------------------------------
+
+addr = f"http://{args.host}:{args.port}"
+
+print(f"Running {args.reps} reps against {addr}")
+
+
+# ---------------------------------------------------------
+# Perform requested operation
+# ---------------------------------------------------------
+
+if args.cmd == 'rawImage':
+
     start = time.perf_counter()
-    for x in range(reps):
-        doRawImage(addr)
-    delta = ((time.perf_counter() - start)/reps)*1000
+
+    for x in range(args.reps):
+        doRawImage(addr, debug=args.debug)
+
+    delta = ((time.perf_counter() - start) / args.reps) * 1000
     print("Took", delta, "ms per operation")
-elif cmd == 'add':
+
+
+elif args.cmd == 'add':
+
     start = time.perf_counter()
-    for x in range(reps):
-        doAdd(addr)
-    delta = ((time.perf_counter() - start)/reps)*1000
+
+    for x in range(args.reps):
+        doAdd(addr, debug=args.debug)
+
+    delta = ((time.perf_counter() - start) / args.reps) * 1000
     print("Took", delta, "ms per operation")
-elif cmd == 'jsonImage':
+
+
+elif args.cmd == 'jsonImage':
+
     start = time.perf_counter()
-    for x in range(reps):
-        doJsonImage(addr, debug=True)
-    delta = ((time.perf_counter() - start)/reps)*1000
+
+    for x in range(args.reps):
+        doJsonImage(addr, debug=args.debug)
+
+    delta = ((time.perf_counter() - start) / args.reps) * 1000
     print("Took", delta, "ms per operation")
-elif cmd == 'dotProduct':
+
+
+elif args.cmd == 'dotProduct':
+
     start = time.perf_counter()
-    for x in range(reps):
-        doDotProduct(addr, debug=True)
-    delta = ((time.perf_counter() - start)/reps)*1000
+
+    for x in range(args.reps):
+        doDotProduct(addr, debug=args.debug)
+
+    delta = ((time.perf_counter() - start) / args.reps) * 1000
     print("Took", delta, "ms per operation")
-else:
-    print("Unknown option", cmd)
+
