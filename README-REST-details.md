@@ -10,10 +10,14 @@ Both of the endpoints you implement can retrieve the JSON arguments using the `r
 
 We've provided starter code in `rest-client.py` that construct a REST request for the `rawimage` and `add` query. The image query loads a 1.6MB JPG image of the flatirons for processing. The image is from Wikipedia and taken by Jesse Varner. Modified by AzaToth. - Self-made photo.Originally uploaded on 2006-04-19 by Molas. Uploaded edit 2007-12-23 by AzaToth., CC BY-SA 2.5, https://commons.wikimedia.org/w/index.php?curid=3267545. You should use the same image for the `jsonimage` endpoint.
 
-You will need to install the base Python3 system as well as the libraries `jsonpickle` and `Pillow` libraries in addition to the `Flask` libraries. The easiest way to do this is using the `pip` command. You'll need to install some Python libraries in addition to the flask libraries installed in lab5. This command install the stuff I needed:
+The project is setup to use uv.
+
 ```
-sudo pip3 install pillow jsonpickle
+uv run rest-server.py
+uv run rest-client.py
 ```
+
+You can also use pip to install the dependencies. They are listed in the pyproject.toml file.
 
 #### What you need to do for the Python section
 
