@@ -15,7 +15,7 @@ Our rest service has four endpoints:
 
 ## REST Implementation
 
-File `server.py` is the starter code for the Flask server in Python. 
+File `rest-server.py` is the starter code for the Flask server in Python. 
 
 We've provided the `add` and `rawImage` endpoints. The `rawImage` returns a response containing a JSON document providing the 'width' and 'height' of the image that was provided. The Python Image Library (pillow) is used to process the image.
 
