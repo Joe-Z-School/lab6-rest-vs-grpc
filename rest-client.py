@@ -41,7 +41,17 @@ def doAdd(addr, debug=False):
 
 
 def doDotProduct(addr, debug=False):
-    pass
+    # Generate 2 vectors of length 100 and each element between 0 and 1
+    a = [random.random() for x in range(100)]
+    b = [random.random() for x in range(100)]
+    data = {'a': a, 'b': b}
+    headers = {'content-type': 'application/json'}
+    dot_url = addr + "/api/dotproduct"
+    response = requests.post(dot_url, data=json.dumps(data), headers=headers)
+    if debug:
+        print("Response is", response)
+        print(json.loads(response.text))
+
 
 
 def doJsonImage(addr, debug=False):
