@@ -51,12 +51,39 @@ def rawimage():
 
 @app.route('/api/dotproduct', methods=['POST'])
 def dotproduct():
-    pass
+    values = request.get_json()
+    a = values['a']
+    b = values['b']
+    response = {'dot_product': sum(i*j for i, j in zip(a, b))}
+    response_pickled = jsonpickle.encode(response)
+    return Response(
+        response=response_pickled,
+        status=200,
+        mimetype="application/json"
+    )
+
+
 
 
 @app.route('/api/jsonimage', methods=['POST'])
 def jsonimage():
-    pass
+    data = request.get_json()
+    encodedImage = data.get('image_base64')
+
+    decodedImage = base64.b64decode(encodedImage)
+    img = Image.open(io.BytesIO(decodedImage))
+
+    response = {
+        'width': img.size[0],
+        'height': img.size[1]
+    }
+    response_pickled = jsonpickle.encode(response)
+
+    return Response(
+        response=response_pickled,
+        status=200,
+        mimetype="application/json"
+    )
 
 
 if __name__ == '__main__':
