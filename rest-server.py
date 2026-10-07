@@ -67,18 +67,26 @@ def dotproduct():
 
 @app.route('/api/jsonimage', methods=['POST'])
 def jsonimage():
+    # Get the request data
     data = request.get_json()
-    encodedImage = data.get('image_base64')
+    # Grab the encoded image from the data
+    encodedImage = data.get('image')
 
+    # Decode the image
     decodedImage = base64.b64decode(encodedImage)
+    # Create a PIL image object
     img = Image.open(io.BytesIO(decodedImage))
 
+    # Grab the width and height of the image
     response = {
         'width': img.size[0],
         'height': img.size[1]
     }
+
+    # Pickle the response
     response_pickled = jsonpickle.encode(response)
 
+    # Return the response
     return Response(
         response=response_pickled,
         status=200,
