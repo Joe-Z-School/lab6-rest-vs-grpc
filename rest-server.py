@@ -5,6 +5,8 @@ import jsonpickle
 from PIL import Image
 import io
 import argparse
+import base64
+
 
 # Initialize the Flask application
 app = Flask(__name__)
