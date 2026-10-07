@@ -22,14 +22,18 @@ log.setLevel(logging.DEBUG)
 
 class RestCompareServicer(lab6_pb2_grpc.RestCompareServicer):
 
-    def add(self, data):
+    def __init__(self):
+        pass
+
+
+    def add(self, data, context):
         responseA = data.a
         responseB = data.b
         reply = lab6_pb2.addReply()
         reply.sum = responseA + responseB
         return reply
 
-    def rawimage(self, data):
+    def rawImage(self, data, context):
         reply = lab6_pb2.imageReply()
 
         # Convert the data to a PIL image type so we can extract dimensions
@@ -46,14 +50,14 @@ class RestCompareServicer(lab6_pb2_grpc.RestCompareServicer):
         return reply
 
 
-    def dotproduct(self, data):
+    def dotProduct(self, data, context):
         reply = lab6_pb2.dotProductReply()
         reply.dotproduct = sum(i*j for i, j in zip(data.a, data.b))
         return reply
 
 
 
-    def jsonimage(self, data):
+    def jsonImage(self, data, context):
         reply = lab6_pb2.imageReply()
 
         # Decode the image
